@@ -45,6 +45,7 @@ unsigned long timerDelay = 5000; //Timer de 5 segundos entre requisições.
 
 //Seu nome de domínio com caminho de URL ou endereço IP com caminho
 String serverThingspeak = "http://api.thingspeak.com/update?api_key=EL177GJPZIAE9HMQ";
+String serverIFTTT = "http://maker.ifttt.com/trigger/temp_trigger/with/key/bm-rEaJjKIEJTcRGECrvym";
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -84,6 +85,18 @@ void loop() {
     Serial.print(t);
     Serial.println(" *C");
     }
+
+    if(t >= 28){
+      WiFiClient client;
+      HTTPClient http;
+      http.begin(client, serverIFTTT);
+
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+      String httpRequestData = "value1=" + String(t);  
+      int httpResponseCode = http.POST(httpRequestData);
+      http.end();
+    }
+
     // Verifica o status da conexão
     if(WiFi.status()== WL_CONNECTED){
       WiFiClient client;
