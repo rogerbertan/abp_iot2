@@ -34,14 +34,32 @@
 #define DHTPIN          D3
 #define DHTTYPE         DHT11
 
+#define analogPin       A0
+
 /* Protótipos de Funções */
 
 
 /* Variáveis Globais */
-const char* ssid = "Antonio";
-const char* password = "julia5050";
+const char* ssid = "SATC IOT";
+const char* password = "IOT2022@";
 unsigned long lastTime = 0;      //Variável de auxílio para medição/sincronização do tempo.
 unsigned long timerDelay = 5000; //Timer de 5 segundos entre requisições.
+
+int valor = 0;
+float tensao, corrente, potencia = 0;
+
+void Read_power (){
+  valor = analogRead(analogPin);
+  tensao = valor*3.3/1024;
+  tensao = tensao*100;   //meter o fakezin
+
+  corrente = tensao/1000;
+  potencia = tensao*corrente;
+
+  Serial.println(tensao);
+  Serial.println(corrente);
+  Serial.println(potencia);
+}
 
 //Seu nome de domínio com caminho de URL ou endereço IP com caminho
 String serverThingspeak = "http://api.thingspeak.com/update?api_key=EL177GJPZIAE9HMQ";
@@ -84,6 +102,7 @@ void loop() {
     Serial.print("\nTemperatura: ");
     Serial.print(t);
     Serial.println(" *C");
+    Read_power();
     }
 
     if(t >= 28){
@@ -102,7 +121,7 @@ void loop() {
       WiFiClient client;
       HTTPClient http;
     
-      String serverPath = serverThingspeak + "&field1=" + t;
+      String serverPath = serverThingspeak + "&field1=" + t + "&field2=" + tensao + "&field3=" + corrente + "&field4=" + potencia;
       
       http.begin(client, serverPath.c_str());
       
