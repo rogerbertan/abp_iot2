@@ -27,10 +27,6 @@
 #include <DHT.h>
 
 /* Definições e Constantes */
-#define LED_R           D6
-#define LED_G           D7
-#define LED_B           D8
-
 #define DHTPIN          D3
 #define DHTTYPE         DHT11
 
@@ -80,13 +76,6 @@ void setup() {
   }
   Serial.print("\nWiFi conectado. Endereço de IP: ");
   Serial.println(WiFi.localIP());
-
-  pinMode(LED_R,OUTPUT);
-  pinMode(LED_G,OUTPUT);
-  pinMode(LED_B,OUTPUT);
-  digitalWrite(LED_R,LOW);
-  digitalWrite(LED_G,LOW);
-  digitalWrite(LED_B,LOW);
   
   dht.begin();
 }
